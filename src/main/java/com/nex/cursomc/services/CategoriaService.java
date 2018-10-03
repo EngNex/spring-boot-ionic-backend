@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.nex.cursomc.domain.Categoria;
+import com.nex.cursomc.domain.Cliente;
 import com.nex.cursomc.dto.CategoriaDTO;
 import com.nex.cursomc.repositories.CategoriaRepository;
 import com.nex.cursomc.services.exception.DataIntegrityException;
@@ -27,15 +28,15 @@ public class CategoriaService {
 		   return obj.orElseThrow(() -> new ObjectNotFoundException(
 		      "Objeto não encontrado! Id: " + id + ", Tipo: " + Categoria.class.getName()));
 		}
-	
 	public Categoria insert(Categoria obj) {
 		obj.setId(null);
 		return repo.save(obj);
 	}
 	
 	public Categoria update(Categoria obj) {
-		find(obj.getId());
-		return repo.save(obj);
+		Categoria newObj = find(obj.getId());
+		updateData(newObj,obj);
+		return repo.save(newObj);
 	}
 	
 	public void delete(Integer  id) {
@@ -58,6 +59,11 @@ public class CategoriaService {
 	}
 	public Categoria fromDTO(CategoriaDTO objDto ) {
 		return new Categoria(objDto.getId(), objDto.getNome());
+
+	}
+	private void updateData(Categoria newObj, Categoria obj) {
+		newObj.setNome(obj.getNome());
+		
 	}
 }
 
